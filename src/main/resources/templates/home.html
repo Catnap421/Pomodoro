@@ -4,18 +4,33 @@
 <head>
     <meta charset="UTF-8">
     <title>Pomodoro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 </head>
 <body>
 <h1>Pomodoro Application</h1>
-<img th:src="@{/images/bleum.png}"/>
+<img th:src="@{/images/bleum.png}" sizes="180"/>
 
 <p>this is pomodoro application. I will complete this before march.</p>
 
 <div class="grid">
     <div class="task">
         <h3>Add Task</h3>
+        <div th:each="pomo : ${pomos}">
+            <span th:text="${pomo.title}"></span>
+            <span th:text="${pomo.text}"></span>
+        </div>
         <p>hihi</p>
     </div>
 </div>
+
+<button onclick="addPomo">ADD Pomo</button>
+<form action="/pomo">
+
+</form>
 </body>
+<script>
+    function addPomo() {
+
+    }
+</script>
 </html>
