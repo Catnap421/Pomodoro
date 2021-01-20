@@ -1,8 +1,11 @@
 package pomodoro;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
+@Slf4j
 public class PomoTimer extends Timer {
     private Timer timer;
     private TaskToDo task;
@@ -17,7 +20,7 @@ public class PomoTimer extends Timer {
         @Override
         public void run(){
            second -= 1;
-
+           log.info("late time: " + second / 60 + " m " + second % 60 + " s");
            if(second == 0) timer.cancel();
         }
     }
@@ -29,10 +32,11 @@ public class PomoTimer extends Timer {
     }
 
     public long pauseTimer(){
-        long lateTime = task.second;
+        long second = task.second;
         timer.cancel();
+        log.info("pause time: " + second / 60 + " m " + second % 60 + " s");
 
-        return lateTime;
+        return second;
     }
 
 }

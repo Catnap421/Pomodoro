@@ -24,4 +24,5 @@ public class ViewController {
         log.info("viewHome");
         return "home";
     }
+
 }
