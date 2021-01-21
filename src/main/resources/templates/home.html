@@ -25,14 +25,14 @@
 </head>
 <body>
 <div class="container-fluid" align="center">
-    <h1>Pomodoro Application</h1>
+    <h1>뽀모 농장</h1>
 
-    <p>this is pomodoro application. I will complete this before march.</p>
+    <p>시간 관리를 위한 뽀모를 심고, 뽀모를 수확해보세요. 더 나은 자신을 위해!</p>
 
 
     <div class="pomoConfig">
         <input type="text" name="taskTitle" size="20" id="taskTitle" value="뽀모 이름"> <br><!-- 꼭 이름 있을 것! -->
-        뽀모 : <h2 id="pomoTitle"></h2>
+        <h2 id="pomoTitle"></h2>
         시간 : <h2 id="pomoTime"></h2>
 
         <button onclick="setPomo(15)" class="btn btn-outline-secondary setButton" id="setButton-15" style="display:inline">15 뽀모</button>
@@ -43,12 +43,12 @@
     </div>
 
     <div class="pomoList" style="width: 400px">
-        <h2>Today's Completed Task</h2>
+        <h2>오늘 수확한 뽀모</h2>
         <ul class="list-group" id="pomoList">
         </ul>
     </div>
 
-    <h3>Made by: <img th:src="@{/images/bleum.png}" width="240" height="160"/></h3>
+    <h3>농장 주인: <img th:src="@{/images/bleum.png}" width="240" height="160"/></h3>
 
 </div>
 
