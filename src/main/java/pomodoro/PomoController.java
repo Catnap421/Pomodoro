@@ -1,39 +1,45 @@
 package pomodoro;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Controller
 @RequestMapping("/pomo")
 public class PomoController {
-    private PomoTimer pomoTimer; // 싱글톤 패턴 적용해야함
+    private Map<String, PomoTimer> pomoTimers = new HashMap<>();
 
     @PostMapping
     @ResponseBody
-    public void startPomo(Model model){ // 사용자의 pomo 정보를 받아와야 함
+    public void startPomo(@RequestBody Pomo pomo){ // 사용자의 pomo 정보를 받아와야 함
+        String userId = pomo.getUserId();
+        long minute = pomo.getMinute();
 
-        long time = 1000 * 60 * 25; // 25분 - 이후 사용자에게 받아와야 할 값
+        if(pomoTimers.containsKey(userId)) {
+            log.info("이미 있는 사용자입니다.");
+            return;
+        }
 
-        pomoTimer = new PomoTimer();
-        pomoTimer.setTimer(25); // 몇 분 뒤 실행?
+        pomoTimers.put(userId, new PomoTimer(userId));
+        PomoTimer pomoTimer = pomoTimers.get(userId);
+        pomoTimer.setTimer(minute);
 
-        log.info("make pomo");
-        log.info("mek");
         return ;
     }
 
-    @GetMapping
+    @GetMapping("/{id}")
     @ResponseBody
-    public void pausePomo(){
-        pomoTimer.pauseTimer();
-        return;
+    public long pausePomo(@PathVariable("id") String id){
+        PomoTimer pomoTimer = pomoTimers.get(id);
+        pomoTimers.remove(id);
+
+        log.info("해당 뽀모의 주인 id : " + pomoTimer.userId);
+
+        return pomoTimer.pauseTimer();
     }
 }

@@ -6,9 +6,14 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 @Slf4j
-public class PomoTimer extends Timer {
+public class PomoTimer {
+    public String userId;
     private Timer timer;
     private TaskToDo task;
+
+    public PomoTimer(String userId){
+        this.userId = userId;
+    }
 
     public class TaskToDo extends TimerTask {
         long second;
@@ -21,7 +26,10 @@ public class PomoTimer extends Timer {
         public void run(){
            second -= 1;
            log.info("late time: " + second / 60 + " m " + second % 60 + " s");
-           if(second == 0) timer.cancel();
+           if(second == 0) {
+               timer.cancel();
+               log.info("timer stop");
+           }
         }
     }
 

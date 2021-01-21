@@ -16,8 +16,8 @@ public class ViewController {
     @GetMapping
     public String viewHome(Model model){
         List<Pomo> pomos = Arrays.asList(
-                new Pomo("title", "이건 내용~"),
-                new Pomo("제목", "보여줘~")
+                new Pomo("Todo",15),
+                new Pomo("Making Pomodoro Application", 25)
         );
 
         model.addAttribute("pomos", pomos);

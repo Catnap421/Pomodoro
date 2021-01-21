@@ -7,30 +7,104 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 </head>
 <body>
-<h1>Pomodoro Application</h1>
-<img th:src="@{/images/bleum.png}" sizes="180"/>
+<div align="center">
+    <h1>Pomodoro Application</h1>
 
-<p>this is pomodoro application. I will complete this before march.</p>
+    <p>this is pomodoro application. I will complete this before march.</p>
 
-<div class="grid">
-    <div class="task">
-        <h3>Add Task</h3>
-        <div th:each="pomo : ${pomos}">
-            <span th:text="${pomo.title}"></span>
-            <span th:text="${pomo.text}"></span>
+    <div class="grid">
+        <div class="task">
+            <h3>Add Task</h3>
+            <div th:each="pomo : ${pomos}">
+                task : <span th:text="${pomo.taskTitle}"></span>
+                minute: <span th:text="${pomo.minute}"></span>
+            </div>
         </div>
-        <p>hihi</p>
     </div>
+
+    시간 : <h2 id="pomo"></h2>
+
+
+    <br>설정 : <input type="text" name="time" size="20" id="time"></br>
+
+
+    <button onclick="setPomo()" class="btn btn-outline-primary" id="setButton" style="display:block">Start</button>
+
+    <button onclick="pausePomo()" class="btn btn-outline-primary" id="pauseButton" style="display:none">Pause</button>
+
+
+    <h3>Made by: <img th:src="@{/images/bleum.png}" width="240" height="160"/></h3>
+
 </div>
 
-<button onclick="addPomo">ADD Pomo</button>
-<form action="/pomo">
-
-</form>
 </body>
-<script>
-    function addPomo() {
 
+<script>
+
+    let intervalId;
+    let userId = "_userId";
+
+    function setPomo() {
+        changeDisplay();
+
+        let countDown = document.getElementById("time").value * 60;
+        let now = 0;
+
+        fetchJson(countDown / 60);
+
+        intervalId = setInterval(function () {
+            now += 1;
+
+            let distance = countDown - now;
+
+            let minutes = Math.floor(distance / 60);
+            let seconds = Math.floor(distance % 60);
+
+            document.getElementById("pomo").innerHTML = minutes + "m " + seconds + "s ";
+
+            if (distance < 1) {
+                document.getElementById("pomo").innerHTML = "END";
+                clearInterval(intervalId);
+            }
+        }, 1000);
+
+    }
+
+    function fetchJson(countDown) {
+        let url = 'http://localhost:8080/pomo';
+        let data = {userId: userId, minute: countDown};
+
+        fetch(url, {
+            method: 'POST', // or 'PUT'
+            body: JSON.stringify(data), // data can be `string` or {object}!
+            headers:{
+                'Content-Type': 'application/json'
+            }
+        }).then(res => res.json())
+            .then(response => console.log('Success:', JSON.stringify(response)))
+            .catch(error => console.error('Error:', error));
+    }
+
+    function pausePomo() {
+        clearInterval(intervalId);
+        changeDisplay();
+        intervalId = undefined;
+
+        let url = `http://localhost:8080/pomo/${userId}`;
+
+        fetch(url, {
+            method: 'GET',
+            headers:{
+                'Content-Type': 'application/json'
+            }
+        }).then(res => res.json())
+            .then(response => console.log('Success:', JSON.stringify(response)))
+            .catch(error => console.error('Error:', error));
+    }
+
+    function changeDisplay(){
+        document.getElementById("setButton").style.display = intervalId === undefined ? "none" : "block";
+        document.getElementById("pauseButton").style.display = intervalId === undefined ? "block" : "none";
     }
 </script>
 </html>
